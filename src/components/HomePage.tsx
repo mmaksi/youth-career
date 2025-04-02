@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { BriefcaseIcon, DocumentTextIcon, UserIcon } from '@heroicons/react/24/outline';
+import SafetyFeatures from './SafetyFeatures';
 
 const HomePage = () => {
   return (
@@ -43,6 +44,11 @@ const HomePage = () => {
             Apply to jobs and connect with employers looking for teen talent
           </p>
         </div>
+      </div>
+
+      {/* Safety Features Section */}
+      <div className="mb-16">
+        <SafetyFeatures />
       </div>
 
       {/* Tips Section */}
