@@ -52,7 +52,7 @@ const Home = () => {
 
       {/* Features Section */}
       <section>
-        <h2 className="text-3xl font-bold text-center mb-12">Why Choose TeenJobBoard?</h2>
+        <h2 className="text-3xl font-bold text-center mb-12">Why Choose YouthCareer?</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {features.map((feature, index) => (
             <div
@@ -93,7 +93,7 @@ const Home = () => {
       <section className="text-center bg-blue-50 p-12 rounded-lg">
         <h2 className="text-3xl font-bold mb-6">Ready to Start Your Job Search?</h2>
         <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-          Join thousands of teens who have found their perfect job through TeenJobBoard.
+          Join thousands of teens who have found their perfect job through YouthCareer.
         </p>
         <Link
           to="/jobs"
