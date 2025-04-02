@@ -1,170 +1,233 @@
 import { useState } from 'react';
 
-interface JobPost {
+interface Job {
   id: number;
   title: string;
   company: string;
   location: string;
-  salary: string;
   description: string;
+  requirements: string[];
+  salary: string;
+  postedDate: string;
+  status: 'active' | 'closed';
 }
 
-const AdminDashboard = () => {
-  const [jobs, setJobs] = useState<JobPost[]>([
-    {
-      id: 1,
-      title: 'Summer Camp Counselor',
-      company: 'Sunshine Camps',
-      location: 'Los Angeles, CA',
-      salary: '$15/hour',
-      description:
-        'Looking for energetic teens to work as camp counselors this summer. Experience with children is a plus!',
-    },
-    // ... other dummy jobs
-  ]);
+const dummyJobs: Job[] = [
+  {
+    id: 1,
+    title: 'Summer Camp Counselor',
+    company: 'Sunshine Camps',
+    location: 'Mountain View, CA',
+    description:
+      'Looking for energetic teens to lead summer camp activities and mentor younger campers.',
+    requirements: ['Age 16+', 'First Aid certification preferred', 'Experience with children'],
+    salary: '$15/hour',
+    postedDate: '2024-03-25',
+    status: 'active',
+  },
+  {
+    id: 2,
+    title: 'Retail Associate',
+    company: 'TeenStyle Clothing',
+    location: 'San Francisco, CA',
+    description: 'Join our team of fashion-forward teens in our youth-focused clothing store.',
+    requirements: ['Age 15+', 'Customer service skills', 'Fashion knowledge'],
+    salary: '$14/hour',
+    postedDate: '2024-03-24',
+    status: 'active',
+  },
+];
 
-  const [newJob, setNewJob] = useState<Omit<JobPost, 'id'>>({
+const AdminDashboard = () => {
+  const [jobs, setJobs] = useState<Job[]>(dummyJobs);
+  const [showNewJobForm, setShowNewJobForm] = useState(false);
+  const [newJob, setNewJob] = useState<Partial<Job>>({
     title: '',
     company: '',
     location: '',
-    salary: '',
     description: '',
+    requirements: [''],
+    salary: '',
+    status: 'active',
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const jobWithId = {
-      ...newJob,
+  const handleNewJobChange = (field: keyof Job, value: string | string[]) => {
+    setNewJob((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const handleRequirementChange = (index: number, value: string) => {
+    setNewJob((prev) => ({
+      ...prev,
+      requirements: prev.requirements?.map((req, i) => (i === index ? value : req)),
+    }));
+  };
+
+  const addRequirement = () => {
+    setNewJob((prev) => ({
+      ...prev,
+      requirements: [...(prev.requirements || []), ''],
+    }));
+  };
+
+  const handleSubmitNewJob = () => {
+    const job: Job = {
+      ...(newJob as Job),
       id: jobs.length + 1,
+      postedDate: new Date().toISOString().split('T')[0],
     };
-    setJobs([...jobs, jobWithId]);
+    setJobs((prev) => [...prev, job]);
+    setShowNewJobForm(false);
     setNewJob({
       title: '',
       company: '',
       location: '',
-      salary: '',
       description: '',
+      requirements: [''],
+      salary: '',
+      status: 'active',
     });
   };
 
-  const handleDelete = (id: number) => {
-    setJobs(jobs.filter((job) => job.id !== id));
+  const toggleJobStatus = (jobId: number) => {
+    setJobs((prev) =>
+      prev.map((job) =>
+        job.id === jobId ? { ...job, status: job.status === 'active' ? 'closed' : 'active' } : job
+      )
+    );
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-        <p className="mt-2 text-lg text-gray-600">Manage job listings and applications</p>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Job Listing Form */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold mb-4">Post New Job</h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label htmlFor="title" className="block text-sm font-medium text-gray-700">
-                Job Title
-              </label>
-              <input
-                type="text"
-                id="title"
-                value={newJob.title}
-                onChange={(e) => setNewJob({ ...newJob, title: e.target.value })}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                required
-              />
-            </div>
-
-            <div>
-              <label htmlFor="company" className="block text-sm font-medium text-gray-700">
-                Company
-              </label>
-              <input
-                type="text"
-                id="company"
-                value={newJob.company}
-                onChange={(e) => setNewJob({ ...newJob, company: e.target.value })}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                required
-              />
-            </div>
-
-            <div>
-              <label htmlFor="location" className="block text-sm font-medium text-gray-700">
-                Location
-              </label>
-              <input
-                type="text"
-                id="location"
-                value={newJob.location}
-                onChange={(e) => setNewJob({ ...newJob, location: e.target.value })}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                required
-              />
-            </div>
-
-            <div>
-              <label htmlFor="salary" className="block text-sm font-medium text-gray-700">
-                Salary
-              </label>
-              <input
-                type="text"
-                id="salary"
-                value={newJob.salary}
-                onChange={(e) => setNewJob({ ...newJob, salary: e.target.value })}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                required
-              />
-            </div>
-
-            <div>
-              <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-                Description
-              </label>
-              <textarea
-                id="description"
-                value={newJob.description}
-                onChange={(e) => setNewJob({ ...newJob, description: e.target.value })}
-                rows={3}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                required
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="w-full bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors"
-            >
-              Post Job
-            </button>
-          </form>
+    <div className="max-w-6xl mx-auto">
+      <div className="bg-white rounded-lg shadow-md p-8">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+          <button
+            onClick={() => setShowNewJobForm(true)}
+            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+          >
+            Post New Job
+          </button>
         </div>
 
-        {/* Job Listings */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold mb-4">Current Job Listings</h2>
-          <div className="space-y-4">
-            {jobs.map((job) => (
-              <div key={job.id} className="border rounded-md p-4">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="font-semibold">{job.title}</h3>
-                    <p className="text-gray-600">{job.company}</p>
-                    <p className="text-sm text-gray-500">{job.location}</p>
-                    <p className="text-sm text-gray-500">{job.salary}</p>
-                  </div>
-                  <button
-                    onClick={() => handleDelete(job.id)}
-                    className="text-red-600 hover:text-red-800"
-                  >
-                    Delete
-                  </button>
-                </div>
+        {showNewJobForm && (
+          <div className="mb-8 p-6 border rounded-md">
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">Post New Job</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Title</label>
+                <input
+                  type="text"
+                  value={newJob.title}
+                  onChange={(e) => handleNewJobChange('title', e.target.value)}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                />
               </div>
-            ))}
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Company</label>
+                <input
+                  type="text"
+                  value={newJob.company}
+                  onChange={(e) => handleNewJobChange('company', e.target.value)}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Location</label>
+                <input
+                  type="text"
+                  value={newJob.location}
+                  onChange={(e) => handleNewJobChange('location', e.target.value)}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Salary</label>
+                <input
+                  type="text"
+                  value={newJob.salary}
+                  onChange={(e) => handleNewJobChange('salary', e.target.value)}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                />
+              </div>
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700">Description</label>
+                <textarea
+                  value={newJob.description}
+                  onChange={(e) => handleNewJobChange('description', e.target.value)}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  rows={3}
+                />
+              </div>
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700">Requirements</label>
+                {newJob.requirements?.map((req, index) => (
+                  <input
+                    key={index}
+                    type="text"
+                    value={req}
+                    onChange={(e) => handleRequirementChange(index, e.target.value)}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    placeholder="Enter a requirement"
+                  />
+                ))}
+                <button onClick={addRequirement} className="mt-2 text-blue-600 hover:text-blue-700">
+                  + Add Requirement
+                </button>
+              </div>
+            </div>
+            <div className="flex justify-end space-x-4 mt-6">
+              <button
+                onClick={() => setShowNewJobForm(false)}
+                className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSubmitNewJob}
+                className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
+              >
+                Post Job
+              </button>
+            </div>
           </div>
+        )}
+
+        <div className="space-y-4">
+          <h2 className="text-2xl font-semibold text-gray-900">Active Job Listings</h2>
+          {jobs.map((job) => (
+            <div key={job.id} className="border rounded-md p-4">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900">{job.title}</h3>
+                  <p className="text-gray-600">{job.company}</p>
+                  <p className="text-gray-500">{job.location}</p>
+                  <p className="text-green-600 font-semibold mt-2">{job.salary}</p>
+                  <p className="text-gray-500 text-sm mt-1">Posted: {job.postedDate}</p>
+                </div>
+                <button
+                  onClick={() => toggleJobStatus(job.id)}
+                  className={`px-4 py-2 rounded-md ${
+                    job.status === 'active'
+                      ? 'bg-red-600 hover:bg-red-700 text-white'
+                      : 'bg-green-600 hover:bg-green-700 text-white'
+                  }`}
+                >
+                  {job.status === 'active' ? 'Close Job' : 'Reopen Job'}
+                </button>
+              </div>
+              <div className="mt-4">
+                <h4 className="font-semibold text-gray-900">Requirements:</h4>
+                <ul className="list-disc list-inside text-gray-600">
+                  {job.requirements.map((req, index) => (
+                    <li key={index}>{req}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
