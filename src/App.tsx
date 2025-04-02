@@ -5,6 +5,7 @@ import JobListings from './components/JobListings';
 import JobDetails from './components/JobDetails';
 import ResumeBuilder from './components/ResumeBuilder';
 import AdminDashboard from './components/AdminDashboard';
+import ModerationDashboard from './components/ModerationDashboard';
 import { useState } from 'react';
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
             <Route path="/job/:id" element={<JobDetails />} />
             <Route path="/resume-builder" element={<ResumeBuilder />} />
             <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/moderation" element={<ModerationDashboard />} />
           </Routes>
         </main>
       </div>

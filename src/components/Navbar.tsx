@@ -24,9 +24,14 @@ const Navbar = ({ isAdmin, isLoggedIn, setIsAdmin, setIsLoggedIn }: NavbarProps)
               Resume Builder
             </Link>
             {isAdmin && (
-              <Link to="/admin" className="text-gray-700 hover:text-blue-600">
-                Admin Dashboard
-              </Link>
+              <>
+                <Link to="/admin" className="text-gray-700 hover:text-blue-600">
+                  Admin Dashboard
+                </Link>
+                <Link to="/moderation" className="text-gray-700 hover:text-blue-600">
+                  Safety & Moderation
+                </Link>
+              </>
             )}
           </div>
 
