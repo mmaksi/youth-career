@@ -28,26 +28,44 @@ const Home = () => {
   return (
     <div className="space-y-16">
       {/* Hero Section */}
-      <section className="text-center py-20 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg">
-        <h1 className="text-5xl font-bold mb-6">Find Your First Job</h1>
-        <p className="text-xl mb-8 max-w-2xl mx-auto">
-          The perfect platform for teenagers to discover job opportunities, build resumes, and start
-          their career journey.
-        </p>
-        <div className="flex justify-center space-x-4">
-          <Link
-            to="/jobs"
-            className="bg-white text-blue-600 px-8 py-3 rounded-md font-semibold hover:bg-blue-50 transition-colors"
-          >
-            Browse Jobs
-          </Link>
-          <Link
-            to="/resume-builder"
-            className="bg-transparent border-2 border-white text-white px-8 py-3 rounded-md font-semibold hover:bg-white/10 transition-colors"
-          >
-            Create Resume
-          </Link>
+      <section className="relative text-center py-24 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+            }}
+          />
         </div>
+
+        {/* Content */}
+        <div className="relative z-10 max-w-4xl mx-auto px-4">
+          <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+            Your First Job Journey Starts Here
+          </h1>
+          <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto text-blue-50">
+            Discover exciting opportunities, build your skills, and take the first step towards your
+            future career.
+          </p>
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <Link
+              to="/jobs"
+              className="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold hover:bg-blue-50 transition-colors text-lg shadow-lg hover:shadow-xl"
+            >
+              Browse Jobs
+            </Link>
+            <Link
+              to="/resume-builder"
+              className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white/10 transition-colors text-lg"
+            >
+              Create Resume
+            </Link>
+          </div>
+        </div>
+
+        {/* Decorative Elements */}
+        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white/10 to-transparent" />
       </section>
 
       {/* Features Section */}
