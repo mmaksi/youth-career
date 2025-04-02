@@ -14,7 +14,7 @@ function App() {
 
   return (
     <Router>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 px-10">
         <Navbar
           isAdmin={isAdmin}
           isLoggedIn={isLoggedIn}

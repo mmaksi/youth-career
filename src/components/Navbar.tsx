@@ -9,7 +9,7 @@ interface NavbarProps {
 
 const Navbar = ({ isAdmin, isLoggedIn, setIsAdmin, setIsLoggedIn }: NavbarProps) => {
   return (
-    <nav className="bg-white shadow-lg">
+    <nav className="bg-white">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           <Link to="/" className="text-2xl font-bold text-blue-600">
