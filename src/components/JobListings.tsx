@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
 
 interface Job {
   id: number;
@@ -46,6 +47,23 @@ const dummyJobs: Job[] = [
 ];
 
 const JobListings = () => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [locationFilter, setLocationFilter] = useState('');
+
+  const filteredJobs = dummyJobs.filter((job) => {
+    const matchesSearch =
+      job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      job.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      job.description.toLowerCase().includes(searchQuery.toLowerCase());
+
+    const matchesLocation =
+      locationFilter === '' ||
+      (locationFilter === 'remote' && job.location.toLowerCase() === 'remote') ||
+      (locationFilter === 'local' && job.location.toLowerCase() !== 'remote');
+
+    return matchesSearch && matchesLocation;
+  });
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -54,9 +72,15 @@ const JobListings = () => {
           <input
             type="text"
             placeholder="Search jobs..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <select className="px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <select
+            value={locationFilter}
+            onChange={(e) => setLocationFilter(e.target.value)}
+            className="px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
             <option value="">All Locations</option>
             <option value="remote">Remote</option>
             <option value="local">Local</option>
@@ -65,7 +89,7 @@ const JobListings = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {dummyJobs.map((job) => (
+        {filteredJobs.map((job) => (
           <div
             key={job.id}
             className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
